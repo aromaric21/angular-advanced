@@ -1,0 +1,48 @@
+.collection-item-card{
+  position: relative;
+  background: #f0f6ff;
+  border: 1px solid #8ca3C7;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 16rem;
+  cursor: pointer;
+}
+
+.collection-item-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.rarity-chip{
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  background: #4a6cf7;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.item-image{
+  margin: 0;
+  text-align: center;
+}
+.item-image img{
+  max-width: 100%;
+  max-height: 10rem;
+  border-radius: 8px;
+}
+
+.item-header{
+  margin-top: 0.75rem;
+}
+.item-name{
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 0;
+  color: #1e2a3a;
+}

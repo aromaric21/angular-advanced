@@ -1,4 +1,7 @@
-h1{
-  background-color: black;
-  color: white;
+.coollection-grid{
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }

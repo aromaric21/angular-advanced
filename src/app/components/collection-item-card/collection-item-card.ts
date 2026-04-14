@@ -6,4 +6,9 @@ import { Component } from '@angular/core';
   templateUrl: './collection-item-card.html',
   styleUrl: './collection-item-card.scss',
 })
-export class CollectionItemCard {}
+export class CollectionItemCard {
+  name = 'My figurine';
+  rarity = "Legendary";
+  description = 'A legendary sword of unmatched sharpness and history.';
+  price = 199;
+}
