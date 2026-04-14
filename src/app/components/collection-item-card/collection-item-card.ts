@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-collection-item-card',
@@ -7,8 +7,8 @@ import { Component } from '@angular/core';
   styleUrl: './collection-item-card.scss',
 })
 export class CollectionItemCard {
-  name = 'My figurine';
-  rarity = "Legendary";
-  description = 'A legendary sword of unmatched sharpness and history.';
-  price = 199;
+  name = input('My figurine');
+  rarity = input("Legendary");
+  description = input('A legendary sword of unmatched sharpness and history.');
+  price = input(199);
 }
