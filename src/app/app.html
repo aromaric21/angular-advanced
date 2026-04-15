@@ -3,8 +3,8 @@
   <div>
     <app-search-bar
       (searchButtonClicked)="incrementCount()"
-      [search]="searchText"
-      (searchChange)="searchText=$event"
+      [(search)]="searchText"
+
     >
     </app-search-bar>
     Clicked count: {{count}}<br>
