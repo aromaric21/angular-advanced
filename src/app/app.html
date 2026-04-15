@@ -10,7 +10,25 @@
 </header>
 <section class="collection-grid">
   @for (item of collectionItems(); track item.name){
-    <app-collection-item-card [item]="item"></app-collection-item-card>
+    @switch (item.rarity){
+      @case ('Legendary'){
+        <div>
+          <app-collection-item-card [item]="item"></app-collection-item-card>
+          <hr class="gold">
+        </div>
+      }
+      @case ('Rare'){
+        <div>
+          <app-collection-item-card [item]="item"></app-collection-item-card>
+          <hr class="grey">
+        </div>
+      }
+      @default {
+        <div>
+          <app-collection-item-card [item]="item"></app-collection-item-card>
+        </div>
+      }
+    }
   }
 </section>
 @let itemsCount = collectionItems()?.length;
