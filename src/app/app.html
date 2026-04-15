@@ -11,7 +11,12 @@
 <section class="collection-grid">
   @for (item of collectionItems(); track item.name){
     <app-collection-item-card [item]="item"></app-collection-item-card>
-  } @empty {
-    <div>No result found</div>
   }
 </section>
+@let itemsCount = collectionItems()?.length;
+@if (itemsCount){
+  <div class="centered">Found {{itemsCount}} result(s)</div>
+}
+  @else {
+  <div>No result found</div>
+}
