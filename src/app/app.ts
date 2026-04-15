@@ -1,30 +1,30 @@
-import { ChangeDetectionStrategy, Component, computed, effect, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, model, signal } from '@angular/core';
 import { CollectionItemCard } from './components/collection-item-card/collection-item-card';
 import { CollectionItem } from './models/collection-item';
 import { SearchBar } from './components/search-bar/search-bar';
+import { Collection } from './models/collection';
 
 @Component({
   selector: 'app-root',
   imports: [CollectionItemCard, SearchBar],
   templateUrl: './app.html',
   styleUrl: './app.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  searchText = '';
-  count = 0;
+  search = model('');
+
   coin!: CollectionItem;
   linx!: CollectionItem;
+  stamp!: CollectionItem;
 
-  itemList: CollectionItem[] = [];
-  selectedItemIndex = signal(0);
-  selectedItem = computed(() => {
-    return this.itemList[this.selectedItemIndex()];
+  selectedCollection = signal<Collection | null>(null);
+  collectionItems = computed(() => {
+    const allItems = this.selectedCollection()?.items;
+    return allItems?.filter(item => item.name.toLowerCase().includes(
+      this.search().toLowerCase()
+    ))
   });
-
-  logEffect = effect(() =>{
-    console.log(this.selectedItemIndex(), this.selectedItem());
-  })
 
   constructor() {
     this.coin = new CollectionItem();
@@ -36,16 +36,16 @@ export class App {
 
     this.linx = new CollectionItem();
 
-    this.itemList = [this.coin, this.linx];
-  }
+    this.stamp = new CollectionItem();
+    this.stamp.name = 'Vieux timbre';
+    this.stamp.description = 'Un vieux timbre';
+    this.stamp.rarity = 'Rare';
+    this.stamp.image = 'img/timbre1.png';
+    this.stamp.price = 555;
 
-  incrementCount() {
-    this.count++;
-  }
-
-  incrementIndex() {
-    this.selectedItemIndex.update((currentValue) => {
-      return (currentValue + 1) % this.itemList.length;
-    });
+    const defaultCollection = new Collection();
+    defaultCollection.title = 'Default Collection';
+    defaultCollection.items = [this.coin, this.linx, this.stamp];
+    this.selectedCollection.set(defaultCollection);
   }
 }
