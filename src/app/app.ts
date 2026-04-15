@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CollectionItemCard } from './components/collection-item-card/collection-item-card';
 import { CollectionItem } from './models/collection-item';
 import { SearchBar } from './components/search-bar/search-bar';
@@ -10,16 +10,18 @@ import { SearchBar } from './components/search-bar/search-bar';
   imports: [CollectionItemCard, SearchBar],
 })
 export class App {
-
   searchText = '';
-  count = 0
+  count = 0;
   coin!: CollectionItem;
   linx!: CollectionItem;
+
   itemList: CollectionItem[] = [];
   selectedItemIndex = signal(0);
+  selectedItem = computed(() => {
+    return this.itemList[this.selectedItemIndex()];
+  });
 
   constructor() {
-
     this.coin = new CollectionItem();
     this.coin.name = 'Pièce de 1972';
     this.coin.description = 'Une Pièce de 1 dollar Americain.';
@@ -29,10 +31,7 @@ export class App {
 
     this.linx = new CollectionItem();
 
-    this.itemList = [
-      this.coin,
-      this.linx
-    ];
+    this.itemList = [this.coin, this.linx];
   }
 
   incrementCount() {
@@ -42,6 +41,6 @@ export class App {
   incrementIndex() {
     this.selectedItemIndex.update((currentValue) => {
       return (currentValue + 1) % this.itemList.length;
-    })
+    });
   }
 }
