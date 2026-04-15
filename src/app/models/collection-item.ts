@@ -1,7 +1,12 @@
 export class CollectionItem {
-  name = "Linx";
-  description = "A legendary sword of unmatched sharpness and history.";
-  rarity = "Legendary";
-  price = 199;
-  image = "img/linx.png";
+  id = -1;
+  name = 'Linx';
+  description = 'A legendary sword of unmatched sharpness and history.';
+  image = 'img/linx.png';
+  rarity = 'Legendary';
+  price = 250;
+
+  copy(){
+    return Object.assign(new CollectionItem(), this);
+  }
 }

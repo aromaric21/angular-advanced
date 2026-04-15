@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, effect, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
 import { CollectionItemCard } from './components/collection-item-card/collection-item-card';
 import { CollectionItem } from './models/collection-item';
 import { SearchBar } from './components/search-bar/search-bar';
 import { Collection } from './models/collection';
+import { CollectionService } from './services/collection-service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,10 @@ import { Collection } from './models/collection';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+
+  private collectionService = new CollectionService();
+
+  count = 0;
   search = model('');
 
   coin!: CollectionItem;
@@ -47,5 +52,7 @@ export class App {
     defaultCollection.title = 'Default Collection';
     defaultCollection.items = [this.coin, this.linx, this.stamp];
     this.selectedCollection.set(defaultCollection);
+
+    this.collectionService.hello();
   }
 }
