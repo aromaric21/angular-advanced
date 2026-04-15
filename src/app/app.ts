@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { CollectionItemCard } from './components/collection-item-card/collection-item-card';
 import { CollectionItem } from './models/collection-item';
 import { SearchBar } from './components/search-bar/search-bar';
@@ -20,6 +20,10 @@ export class App {
   selectedItem = computed(() => {
     return this.itemList[this.selectedItemIndex()];
   });
+
+  logEffect = effect(() =>{
+    console.log(this.selectedItemIndex(), this.selectedItem());
+  })
 
   constructor() {
     this.coin = new CollectionItem();
