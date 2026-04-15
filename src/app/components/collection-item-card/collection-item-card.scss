@@ -46,3 +46,18 @@
   margin-top: 0;
   color: #1e2a3a;
 }
+
+.item-description{
+  margin: 0.75rem;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+.item-price{
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e8a3a;
+  margin: 0;
+}

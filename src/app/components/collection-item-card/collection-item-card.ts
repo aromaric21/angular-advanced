@@ -1,4 +1,6 @@
 import { Component, input } from '@angular/core';
+import { CollectionItem } from '../../models/collection-item';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-collection-item-card',
@@ -7,8 +9,5 @@ import { Component, input } from '@angular/core';
   styleUrl: './collection-item-card.scss',
 })
 export class CollectionItemCard {
-  name = input('My figurine');
-  rarity = input("Legendary");
-  description = input('A legendary sword of unmatched sharpness and history.');
-  price = input(199);
+  item = input.required<CollectionItem>();
 }

@@ -1,4 +1,17 @@
-<section class="coollection-grid">
-  <app-collection-item-card></app-collection-item-card>
-  <app-collection-item-card name="Linx" [price]="20"></app-collection-item-card>
+<header id="collection-header">
+  <h1>My collections</h1>
+  <div>
+    <app-search-bar
+      (searchButtonClicked)="incrementCount()"
+      [search]="searchText"
+      (searchChange)="searchText=$event"
+    >
+    </app-search-bar>
+    Clicked count: {{count}}<br>
+    Search text : {{searchText}}
+  </div>
+</header>
+<section class="collection-grid">
+  <app-collection-item-card [item]="linx" ></app-collection-item-card>
+  <app-collection-item-card [item]="coin"></app-collection-item-card>
 </section>

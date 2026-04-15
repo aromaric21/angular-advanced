@@ -1,12 +1,34 @@
-import { Component, signal } from '@angular/core';
+import { Component} from '@angular/core';
 import { CollectionItemCard } from './components/collection-item-card/collection-item-card';
+import { CollectionItem } from './models/collection-item';
+import { SearchBar } from './components/search-bar/search-bar';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
-  imports: [CollectionItemCard]
+  imports: [CollectionItemCard, SearchBar],
 })
 export class App {
-  protected readonly title = signal('collection-manager');
+
+  searchText = '';
+  count = 0
+  coin!: CollectionItem;
+  linx!: CollectionItem;
+
+  constructor() {
+
+    this.coin = new CollectionItem();
+    this.coin.name = 'Pièce de 1972';
+    this.coin.description = 'Une Pièce de 1 dollar Americain.';
+    this.coin.rarity = 'Commune';
+    this.coin.image = 'img/coin1.png';
+    this.coin.price = 170;
+
+    this.linx = new CollectionItem();
+  }
+
+  incrementCount() {
+    this.count++;
+  }
 }
