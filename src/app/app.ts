@@ -1,51 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
-import { CollectionItemCard } from './components/collection-item-card/collection-item-card';
-import { SearchBar } from './components/search-bar/search-bar';
-import { Collection } from './models/collection';
-import { CollectionService } from './services/collection-service';
-import { CollectionItem } from './models/collection-item';
+import { ChangeDetectionStrategy, Component,} from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-root',
-  imports: [CollectionItemCard, SearchBar],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
 })
-export class App {
+class App {}
 
-  private collectionService = new CollectionService();
-
-  // count = 0;
-  search = model('');
-
-  // coin!: CollectionItem;
-  // linx!: CollectionItem;
-  // stamp!: CollectionItem;
-
-  selectedCollection = signal<Collection | null>(null);
-  displayedItems = computed(() => {
-    const allItems = this.selectedCollection()?.items || [];
-    return allItems.filter(item => item.name.toLowerCase().includes(
-      this.search().toLowerCase()
-      )
-    )
-  });
-
-  constructor() {
-    const allCollections = this.collectionService.getAll();
-    if (allCollections.length > 0) {
-      this.selectedCollection.set(allCollections[0]);
-    }
-  }
-
-  addGenericItem(): void {
-    const collection = this.selectedCollection();
-    if (collection) {
-      const storedCollection = this.collectionService.addItem(
-        collection, new CollectionItem()
-      );
-      this.selectedCollection.set(storedCollection);
-    }
-  }
-}
+export default App;

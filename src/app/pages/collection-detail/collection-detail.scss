@@ -1,0 +1,23 @@
+#collection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 1rem;
+}
+.collection-grid{
+  display: flex;
+  width: 100%;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.centered{
+  text-align: center;
+  margin-top: 1rem;
+}
+hr.gold{
+  border-color: goldenrod;
+}
+hr.grey{
+  border-style: dashed;
+}
