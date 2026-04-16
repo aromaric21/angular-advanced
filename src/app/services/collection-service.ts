@@ -12,30 +12,48 @@ export class CollectionService {
 
   constructor() {
     this.load();
-    this.generateDummyData();
+    //this.generateDummyData();
   }
 
   private save(){
-    localStorage.setItem('collections', JSON.stringify(this.collections));
+    localStorage.setItem('collection', JSON.stringify(this.collections));
   }
 
   private load() {
     const collectionJson = localStorage.getItem('collections');
     if (collectionJson) {
-      this.collections = JSON.parse(collectionJson).map((collectionJson: any) => {
-        const collection = Object.assign(new Collection(), collectionJson);
-        const itemJson = collectionJson['items'] || [];
-        collection.items = itemJson.map((item: any) => Object.assign(new CollectionItem(), itemJson));
+      const parsed = JSON.parse(collectionJson);
+
+      this.collections = parsed.map((col: any) => {
+        // Reconstruire l'objet Collection
+        const collection = Object.assign(new Collection(), col);
+
+        // Reconstruire les items de la collection
+        const itemsJson = col.items || [];
+        collection.items = itemsJson.map((item: any) =>
+          Object.assign(new CollectionItem(), item)
+        );
+
         return collection;
       });
-      this.currentId = Math.max(...this.collections.map(collection => collection.id ));
+
+      // Calculer l'ID courant pour les collections
+      this.currentId = this.collections.length > 0
+        ? Math.max(...this.collections.map(c => c.id)) + 1
+        : 1;
+
+      // Calculer l'index courant des items par collection
       this.currentItemIndex = this.collections.reduce(
-        (indexes: {[key: number]:number}, collection) => {
-          indexes[collection.id] = Math.max(...collection.items.map(item => item.id));
-            return indexes;
-        }, {}
+        (indexes: { [key: number]: number }, collection) => {
+          indexes[collection.id] = collection.items.length > 0
+            ? Math.max(...collection.items.map(item => item.id)) + 1
+            : 1;
+          return indexes;
+        },
+        {}
       );
-    }else {
+    } else {
+      // Si rien n'est stocké, générer des données par défaut
       this.generateDummyData();
       this.save();
     }
@@ -103,6 +121,7 @@ export class CollectionService {
   delete(collectionId: number): void {
     this.collections = this.collections.filter(
       collection => collection.id !== collectionId);
+    this.save();
   }
 
   addItem(collection: Collection, item: CollectionItem): Collection | null {
@@ -148,8 +167,8 @@ export class CollectionService {
     storedCollection.items = storedCollection.items.filter(
       item => item.id === item.id
     );
-    this.save();
 
+    this.save();
     return storedCollection.copy();
   }
 }
