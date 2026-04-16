@@ -1,6 +1,7 @@
-@if (itemId()) {
-  <p>Item {{itemId()}}!</p>
-  <button (click)="next()">Next</button>
+@let selectedId = itemId();
+@if (selectedId) {
+  <p>Item {{selectedId}}!</p>
+  <button [routerLink]="['/item', selectedId + 1]">Next</button>
 } @else {
   <p> New item!</p>
 
