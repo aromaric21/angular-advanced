@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, model, signal } from '@angular/core';
 import { CollectionItemCard } from '../../components/collection-item-card/collection-item-card';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { CollectionService } from '../../services/collection-service';
@@ -14,7 +14,7 @@ import { CollectionItem } from '../../models/collection-item';
 })
 export class CollectionDetail {
 
-  private collectionService = new CollectionService();
+  collectionService = inject(CollectionService);
   count = 0;
   search = model('');
 

@@ -6,7 +6,11 @@ import { NotFound } from './pages/not-found/not-found';
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: CollectionDetail },
-  { path: 'item', component: CollectionItemDetail },
-  { path: 'item/:id', component: CollectionItemDetail },
+  { path: 'item',
+    children: [
+      {path: '',  component: CollectionItemDetail},
+      {path: ':id', component: CollectionItemDetail},
+    ]
+  },
   { path: '**', component: NotFound },
 ];
