@@ -1,5 +1,5 @@
 <form (submit)="submit($event)">
   <label>Name:</label>
-  <input name="name" [(ngModel)]="name"/><br>
-  <button type="submit">Submit</button>
+  <input type="text" [formField]="testForm.name"/><br>
+  <button type="submit" [disabled]="!testForm().valid">Submit</button>
 </form>
