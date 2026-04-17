@@ -1,14 +1,50 @@
-<form (submit)="submit($event)">
+<form [formGroup]="itemFormGroup" (submit)="submit($event)">
   <div class="form-field">
     <label for="name">Name:</label>
     <input type="text"
            id="name"
            name="name"
-           [formControl]="nameFormControl"
+           formControlName="name"
     />
-    @if (nameFormControl.invalid && (
-      nameFormControl.touched || nameFormControl.dirty
-    )){
+    @if (isFieldValid('name')){
+      <div class="error">This field is required!</div>
+    }
+  </div>
+  <div class="form-field">
+    <label for="description">Description:</label>
+    <input type="text"
+           id="description"
+           name="description"
+           formControlName="description"
+    />
+    @if (isFieldValid('description')){
+      <div class="error">This field is required!</div>
+    }
+  </div>
+  <div class="form-field">
+    <label for="image">Image</label>
+    <input type="file"
+           (change)="onFileChange($event)"
+           id="image"
+           name="image"
+           formControlName="image"
+    />
+    @if (isFieldValid('image')){
+      <div class="error">This field is required!</div>
+    }
+  </div>
+  <div class="form-field">
+    <label for="rarity">Rarity</label>
+    <select
+      id="rarity"
+      name="rarity"
+      formControlName="rarity"
+    >
+      @for (rarity of rarities; track rarity){
+        <option [value]="rarity">{{rarity}}</option>
+      }
+    </select>
+    @if (isFieldValid('name')){
       <div class="error">This field is required!</div>
     }
   </div>
@@ -17,17 +53,23 @@
     <input type="number"
            id="price"
            name="price"
-           [formControl]="priceFormControl"
+           formControlName="price"
     />
-    @if (priceFormControl.invalid && (
-      priceFormControl.touched || priceFormControl.dirty
-    )){
-      <div class="error">This field is required!</div>
+    @if (isFieldValid('price')){
+      @let priceFC = itemFormGroup.get('price');
+      @if (priceFC?.hasError('min')){
+        <div class="error">
+          This value must be bigger or equal to 0.
+        </div>
+      } @else {
+        <div class="error">This field is required!</div>
+      }
     }
   </div>
   <button
     type="submit"
-    [disabled]="nameFormControl.invalid || priceFormControl.invalid"
-  >Submit
+    [disabled]="itemFormGroup.invalid"
+  >
+    Submit
   </button>
 </form>

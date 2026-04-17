@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Collection } from '../models/collection';
-import { CollectionItem } from '../models/collection-item';
+import { CollectionItem, Rarities } from '../models/collection-item';
 
 @Injectable({
   providedIn: 'root',
@@ -63,14 +63,14 @@ export class CollectionService {
     const coin = new CollectionItem();
     coin.name = 'Pièce de 1972';
     coin.description = 'Pièce de 1 dollar Americain.';
-    coin.rarity = 'Common';
+    coin.rarity = Rarities.Common;
     coin.image = 'img/coin1.png';
     coin.price = 170;
 
     const stamp = new CollectionItem();
     stamp.name = 'Timbre 1800';
     stamp.description = 'Un très vieux timbre.';
-    stamp.rarity = 'Rarity';
+    stamp.rarity = Rarities.Uncommon;
     stamp.image = 'img/timbre1.png';
     stamp.price = 555;
 
