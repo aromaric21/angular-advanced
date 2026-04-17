@@ -9,11 +9,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './collection-item-detail.scss',
 })
 export class CollectionItemDetail {
-  private readonly activedRoute = inject(ActivatedRoute);
-  private readonly router = inject(Router);
 
-  itemId = input<number | null, string | null>(null, {
-    alias: 'id',
-    transform: (value) => (value ? parseInt(value) : null),
-  });
+  name= '';
+
+  submit(event: Event){
+    event.preventDefault();
+    console.log(this.name);
+  }
 }

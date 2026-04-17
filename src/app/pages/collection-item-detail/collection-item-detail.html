@@ -1,8 +1,5 @@
-@let selectedId = itemId();
-@if (selectedId) {
-  <p>Item {{selectedId}}!</p>
-  <button [routerLink]="['/item', selectedId + 1]">Next</button>
-} @else {
-  <p> New item!</p>
-
-}
+<form (submit)="submit($event)">
+  <label>Name:</label>
+  <input name="name" [(ngModel)]="name"/><br>
+  <button type="submit">Submit</button>
+</form>
