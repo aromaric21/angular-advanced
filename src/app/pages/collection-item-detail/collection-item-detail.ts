@@ -1,5 +1,9 @@
-import { Component} from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Rarities } from '../../models/collection-item';
 @Component({
   selector: 'app-collection-item-detail',
@@ -9,14 +13,16 @@ import { Rarities } from '../../models/collection-item';
 })
 export class CollectionItemDetail {
 
+  private fb = inject(FormBuilder);
+
   readonly rarities = Object.values(Rarities);
 
-  itemFormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
-    image: new FormControl('', [Validators.required]),
-    rarity: new FormControl(Rarities.Common, [Validators.required]),
-    price: new FormControl(0, [Validators.required, Validators.min(0)]),
+  itemFormGroup = this.fb.group({
+    name: ['', [Validators.required]],
+    description: ['', [Validators.required]],
+    image: ['', [Validators.required]],
+    rarity: [Rarities.Common, [Validators.required]],
+    price: [0, [Validators.required, Validators.min(0)]],
   });
 
   submit(event: Event) {
