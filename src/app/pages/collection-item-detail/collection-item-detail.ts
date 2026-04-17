@@ -1,24 +1,25 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { FormGroup, FormsModule } from '@angular/forms';
-import { form, FormField, required } from '@angular/forms/signals';
-
+import { Component} from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 @Component({
   selector: 'app-collection-item-detail',
-  imports: [FormsModule, FormField],
+  imports: [ReactiveFormsModule],
   templateUrl: './collection-item-detail.html',
   styleUrl: './collection-item-detail.scss',
 })
 export class CollectionItemDetail {
-  formModel = signal({
-    name: '',
-  });
 
-  testForm = form(this.formModel, (schemaPath) => {
-    required(schemaPath.name, { message: 'Name is required!' });
-  });
+  nameFormControl = new FormControl('', [Validators.required]);
+  priceFormControl = new FormControl(
+    0, [Validators.required, Validators.min(0)]
+  );
 
   submit(event: Event) {
     event.preventDefault();
-    console.log(this.testForm().value());
+    console.log(this.nameFormControl.value);
+    console.log(this.priceFormControl.value);
+  }
+
+  setName() {
+    this.nameFormControl.setValue('Change Me');
   }
 }
