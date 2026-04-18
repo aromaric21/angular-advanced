@@ -11,9 +11,5 @@ import { FormsModule } from '@angular/forms';
 export class SearchBar {
 
   search = model("Initial");
-  searchButtonClicked: OutputEmitterRef<void> = output<void>();
 
-  searchClicked() {
-    this.searchButtonClicked.emit();
-  }
 }

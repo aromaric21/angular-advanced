@@ -1,5 +1,5 @@
 <header id="collection-header">
-  <h1>My collections</h1>
+  <h1>{{selectedCollection()?.title}}</h1>
   <div>
     <app-search-bar
       [(search)]="search"
@@ -12,29 +12,34 @@
     @switch (item.rarity){
       @case ('Legendary'){
         <div>
-          <app-collection-item-card [item]="item"></app-collection-item-card>
+          <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
           <hr class="gold">
         </div>
       }
       @case ('Rare'){
         <div>
-          <app-collection-item-card [item]="item"></app-collection-item-card>
-          <hr class="grey">
+          <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
+          <hr class="dashed">
         </div>
       }
       @default {
         <div>
-          <app-collection-item-card [item]="item"></app-collection-item-card>
+          <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
         </div>
       }
     }
   }
 </section>
-@let itemsCount = displayedItems()?.length;
-@if (itemsCount){
-  <div class="centered">Found {{itemsCount}} result(s)</div>
+@let displayedItemsCount = displayedItems().length;
+@if (displayedItemsCount > 0){
+  <div class="centered">Found {{displayedItemsCount}}objet(s) affiché(s).</div>
 }
 @else {
   <div>No result found</div>
 }
-<div class="centered"><button (click)="addGenericItem()">Add Generic Item</button></div>
+<div  class="centered">
+  <button matButton="filled" (click)="addItem()"
+  >
+    Add Item
+  </button>
+</div>

@@ -1,11 +1,14 @@
 .collection-item-card{
+  display: flex;
+  flex-direction: column;
   position: relative;
   background: #f0f6ff;
   border: 1px solid #8ca3C7;
   border-radius: 12px;
   padding: 1rem;
+  width: 16rem;
+  height: 21rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  max-width: 16rem;
   cursor: pointer;
 }
 
@@ -39,11 +42,12 @@
 
 .item-header{
   margin-top: 0.75rem;
+  flex-shrink: 0;
 }
 .item-name{
   font-size: 1.25rem;
   font-weight: 700;
-  margin-top: 0;
+  margin: 0;
   color: #1e2a3a;
 }
 

@@ -8,11 +8,11 @@ export type Rarity = typeof Rarities[keyof typeof Rarities];
 
 export class CollectionItem {
   id = -1;
-  name = 'Linx';
-  description = 'A legendary sword of unmatched sharpness and history.';
-  image = 'img/linx.png';
-  rarity:Rarity = Rarities.Legendary;
-  price = 250;
+  name = '';
+  description = '';
+  image = '';
+  rarity:Rarity = 'Common';
+  price = 0;
 
   copy(){
     return Object.assign(new CollectionItem(), this);

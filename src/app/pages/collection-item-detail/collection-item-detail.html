@@ -1,56 +1,66 @@
+<app-collection-item-card [item]="collectionItem()" />
+
 <form [formGroup]="itemFormGroup" (submit)="submit($event)">
-  <div class="form-field">
-    <label for="name">Name:</label>
-    <input type="text"
+  <mat-form-field class="form-field">
+    <mat-label for="name">Name:</mat-label>
+    <input matInput
            id="name"
            name="name"
            formControlName="name"
     />
     @if (isFieldValid('name')){
-      <div class="error">This field is required!</div>
+      <mat-error>This field is required!</mat-error>
     }
-  </div>
-  <div class="form-field">
-    <label for="description">Description:</label>
-    <input type="text"
-           id="description"
-           name="description"
-           formControlName="description"
-    />
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <mat-label for="description">Description:</mat-label>
+    <textarea matInput
+      type="text"
+      id="description"
+      name="description"
+      formControlName="description"
+      rows="5"
+    >
+    </textarea>
     @if (isFieldValid('description')){
-      <div class="error">This field is required!</div>
+      <mat-error>This field is required!</mat-error>
     }
-  </div>
+  </mat-form-field>
   <div class="form-field">
-    <label for="image">Image</label>
-    <input type="file"
-           (change)="onFileChange($event)"
-           id="image"
-           name="image"
-           formControlName="image"
-    />
+    <button
+      matButton="elevated"
+      (click)="$event.preventDefault(); imageUploader.click()"
+     >
+      Upload Image: {{imageUploader.files?.[0]?.name || '...'}}
+    </button>
+    <input
+      hidden
+      #imageUploader
+      id="image"
+      name="image"
+      type="file"
+      (change)="onFileChange($event)"
+    >
     @if (isFieldValid('image')){
-      <div class="error">This field is required!</div>
+      <mat-error>This field is required!</mat-error>
     }
   </div>
-  <div class="form-field">
-    <label for="rarity">Rarity</label>
-    <select
+  <mat-form-field class="form-field">
+    <mat-label for="rarity">Rarity</mat-label>
+    <mat-select
       id="rarity"
       name="rarity"
       formControlName="rarity"
     >
       @for (rarity of rarities; track rarity){
-        <option [value]="rarity">{{rarity}}</option>
+        <mat-option [value]="rarity">{{rarity}}</mat-option>
       }
-    </select>
-    @if (isFieldValid('name')){
-      <div class="error">This field is required!</div>
-    }
-  </div>
-  <div class="form-field">
-    <label for="price">price:</label>
-    <input type="number"
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="form-field">
+    <mat-label for="price">price:</mat-label>
+    <input matInput
+           type="number"
            id="price"
            name="price"
            formControlName="price"
@@ -58,18 +68,29 @@
     @if (isFieldValid('price')){
       @let priceFC = itemFormGroup.get('price');
       @if (priceFC?.hasError('min')){
-        <div class="error">
+        <mat-error>
           This value must be bigger or equal to 0.
-        </div>
+        </mat-error>
       } @else {
-        <div class="error">This field is required!</div>
+        <mat-error>This field is required!</mat-error>
       }
     }
+  </mat-form-field>
+  <div class="action-buttons">
+    <div class="left">
+      @if (this.itemId()) {
+        <button matButton="filled" class="danger" type="button" (click)="deleteItem()">Delete</button>
+      }
+    </div>
+    <div class="right">
+      <button matButton="text" type="button" (click)="cancel()">Cancel</button>
+      <button
+        matButton="filled"
+        type="submit"
+        [disabled]="itemFormGroup.invalid"
+      >
+        Save
+      </button>
+    </div>
   </div>
-  <button
-    type="submit"
-    [disabled]="itemFormGroup.invalid"
-  >
-    Submit
-  </button>
 </form>
