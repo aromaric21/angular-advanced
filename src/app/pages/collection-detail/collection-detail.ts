@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, model, signal } from '@angular/core';
 import { CollectionItemCard } from '../../components/collection-item-card/collection-item-card';
 import { SearchBar } from '../../components/search-bar/search-bar';
-import { CollectionService } from '../../services/collection-service';
+import { CollectionService } from '../../services/collection/collection-service';
 import { Collection } from '../../models/collection';
 import { CollectionItem } from '../../models/collection-item';
 import { Router } from '@angular/router';
@@ -26,7 +26,8 @@ export class CollectionDetail {
   displayedItems = computed(() => {
     const allItems = this.selectedCollection()?.items || [];
     return allItems.filter(item =>
-      item.name.toLowerCase().includes((this.search() || '').toLowerCase()
+      item.name.toLowerCase().includes(
+        (this.search() || '').toLowerCase()
     )
   );
   });
