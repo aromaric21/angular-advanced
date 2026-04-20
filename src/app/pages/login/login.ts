@@ -17,11 +17,12 @@ import { Subscription } from 'rxjs';
   styleUrl: './login.scss',
 })
 export class Login implements OnDestroy {
+
   private loginService = inject(LoginService);
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
 
-  private loginSubscription: Subscription | null = null;
+  private subscriptions= new Subscription();
 
   loginFormGroup = this.formBuilder.group({
     username: ['', Validators.required],
@@ -31,12 +32,20 @@ export class Login implements OnDestroy {
   invalidCredentials = signal(false);
 
   login() {
-    this.loginSubscription = this.loginService.login(
+    const loginSubscription = this.loginService.login(
       this.loginFormGroup.value as LoginCredentialsDTO
     ).subscribe({
-      next: () => this.navigateHome(),
+      next: () => this.getUserInformation(),
         error: () => this.invalidCredentials.set(true)
     });
+    this.subscriptions.add(loginSubscription);
+  }
+
+  getUserInformation(){
+    const getuserSubscripion = this.loginService.getUser().subscribe(user => {
+        this.navigateHome();
+    });
+    this.subscriptions.add(getuserSubscripion);
   }
 
   navigateHome(){
@@ -44,7 +53,7 @@ export class Login implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.loginSubscription?.unsubscribe();
+    this.subscriptions?.unsubscribe();
   }
 }
 
