@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, OnDestroy, signal } from '@angular/core';
+import { Component, inject, input, linkedSignal, OnDestroy, signal } from '@angular/core';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -7,12 +7,13 @@ import {
 import { CollectionItem, Rarities } from '../../models/collection-item';
 import { Router } from '@angular/router';
 import { CollectionService } from '../../services/collection/collection-service';
-import { Collection } from '../../models/collection';
-import { Subscription } from 'rxjs';
+import { catchError, EMPTY, filter, Subscription, switchMap, tap } from 'rxjs';
 import { CollectionItemCard } from '../../components/collection-item-card/collection-item-card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { CollectionItemService } from '../../services/collection-item/collection-item-service';
 
 
 @Component({
@@ -28,74 +29,100 @@ import { MatSelectModule } from '@angular/material/select';
   templateUrl: './collection-item-detail.html',
   styleUrl: './collection-item-detail.scss',
 })
-export class CollectionItemDetail implements OnDestroy {
+export class CollectionItemDetail {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private collectionService = inject(CollectionService);
+  private readonly collectionService = inject(CollectionService);
+  private readonly collectionItemService = inject(CollectionItemService);
 
   valueChangeSubscription: Subscription | null = null;
 
-  readonly rarities = Object.values(Rarities);
+  rarities = Object.values(Rarities);
 
-  itemId = input<number | null, string | null>(null, {
+  itemId = input<number | undefined, string | undefined>(undefined, {
     alias: 'id',
-    transform: (id: string | null) => (id ? parseInt(id) : null),
+    transform: (id: string | undefined) => (id ? parseInt(id) : undefined),
   });
 
-  selectedCollection!: Collection;
+  selectedCollection = linkedSignal(() => this.collectionService.selectedCollection());
   collectionItem = signal<CollectionItem>(new CollectionItem());
 
   itemFormGroup = this.fb.group({
     name: ['', [Validators.required]],
     description: ['', [Validators.required]],
     image: ['', [Validators.required]],
-    rarity: ['Common', [Validators.required]],
+    rarity: ['', [Validators.required]],
     price: [0, [Validators.required, Validators.min(0)]],
   });
-  protected imageUploader: any;
+
+  collectionItem$ = toObservable(this.itemId).pipe(
+    takeUntilDestroyed(),
+    filter((itemId) => itemId !== undefined),
+    switchMap((itemId) => this.collectionItemService.get(itemId)),
+    tap((item) => {
+      this.collectionItem.set(item);
+      this.itemFormGroup.patchValue(item);
+    }),
+  );
+
+  itemCollection$ = this.collectionItem$.pipe(
+    takeUntilDestroyed(),
+    switchMap((item) => this.collectionService.get(item.collectionId)),
+    catchError((error) => {
+      this.navigateBack();
+      return EMPTY;
+    }),
+    tap((collection) => {
+      this.selectedCollection.set(collection);
+    }),
+  );
+
+  formValueChanges$ = this.itemFormGroup.valueChanges.pipe(
+    takeUntilDestroyed(),
+    tap((_) => {
+      this.collectionItem.set(
+        Object.assign(new CollectionItem(), {
+          ...this.itemFormGroup.value,
+          id: this.itemId(),
+          collectionId: this.selectedCollection()?.id,
+        }),
+      );
+    }),
+  );
 
   constructor() {
-    effect(() => {
-      let itemToDisplay = new CollectionItem();
-      this.selectedCollection = this.collectionService.getAll()[0];
-      if (this.itemId()) {
-        const itemFound = this.selectedCollection.items.find((item) => item.id === this.itemId());
-        if (itemFound) {
-          itemToDisplay = itemFound;
-        } else {
-          this.router.navigate(['not-found']);
-        }
-      }
-      this.itemFormGroup.patchValue(itemToDisplay);
-    });
-    this.valueChangeSubscription = this.itemFormGroup.valueChanges.subscribe((_) => {
-      this.collectionItem.set(Object.assign(new CollectionItem(), this.itemFormGroup.value));
-    });
+    this.collectionItem$.subscribe();
+    this.formValueChanges$.subscribe();
   }
 
   submit(event: Event) {
     event.preventDefault();
 
-    const itemId = this.itemId();
-    if (itemId) {
-      this.collectionItem().id = itemId;
-      this.collectionService.updateItem(this.selectedCollection, this.collectionItem());
+    const item = this.collectionItem();
+    if (!item) return;
+
+    let saveObservable = null;
+    if (item.id) {
+      saveObservable = this.collectionItemService.update(item);
     } else {
-      this.collectionService.addItem(this.selectedCollection, this.collectionItem());
+      saveObservable = this.collectionItemService.add(item);
     }
 
-    this.router.navigate(['/']);
+    saveObservable.subscribe(() => {
+      this.navigateBack();
+    });
   }
 
   deleteItem() {
-    const itemId = this.itemId();
-    if (itemId) {
-      this.collectionService.deleteItem(this.selectedCollection.id, itemId);
+    const item = this.collectionItem();
+    if (item) {
+      this.collectionItemService.delete(item).subscribe(() => {
+        this.navigateBack();
+      });
     }
-    this.router.navigate(['/']);
   }
 
-  cancel() {
+  navigateBack() {
     this.router.navigate(['/']);
   }
 
@@ -104,23 +131,18 @@ export class CollectionItemDetail implements OnDestroy {
     return formControl?.invalid && (formControl?.dirty || formControl?.touched);
   }
 
-  onFileChange(event: any) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      console.log('Fichier choisi :', file.name);
+  //previewImage: string | null = null;
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        //Sauvegarde en base64 dans le Local Storage
-        localStorage.setItem('imageData', reader.result as string);
-      };
+  onFileChange(event: any) {
+    const reader = new FileReader();
+    if (event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
       reader.readAsDataURL(file);
-      // 👉 Réinitialiser le champ fichier
-      input.value = '';
+      reader.onload = () => {
+        this.itemFormGroup.patchValue({
+          image: reader.result as string,
+        });
+      };
     }
-  }
-  ngOnDestroy() {
-    this.valueChangeSubscription?.unsubscribe();
   }
 }

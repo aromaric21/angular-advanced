@@ -6,8 +6,13 @@ import { Login } from './pages/login/login';
 import { isLoggedInGuard } from './guards/is-logged-in/is-logged-in-guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: CollectionDetail, canActivate: [isLoggedInGuard] },
+  { path: '', redirectTo: 'collection', pathMatch: 'full' },
+  { path: 'collection',
+    children: [
+      {path: '', component: CollectionDetail, canActivate: [isLoggedInGuard]},
+      {path: ':id', component: CollectionDetail, canActivate: [isLoggedInGuard]},
+    ]
+  },
   {
     path: 'item',
     children: [

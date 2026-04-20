@@ -49,7 +49,7 @@ export class Login implements OnDestroy {
   }
 
   navigateHome(){
-    this.router.navigate(['home']);
+    this.router.navigate(['/']);
   }
 
   ngOnDestroy(): void {

@@ -1,35 +1,37 @@
-<header id="collection-header">
-  <h1>{{selectedCollection()?.title}}</h1>
-  <div>
-    <app-search-bar
-      [(search)]="search"
-    >
-    </app-search-bar>
-  </div>
-</header>
-<section class="collection-grid">
-  @for (item of displayedItems(); track item.name){
-    @switch (item.rarity){
-      @case ('Legendary'){
-        <div>
-          <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
-          <hr class="gold">
-        </div>
-      }
-      @case ('Rare'){
-        <div>
-          <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
-          <hr class="dashed">
-        </div>
-      }
-      @default {
-        <div>
-          <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
-        </div>
+@let collection = selectedCollection();
+@if (collection){
+  <header id="collection-header">
+    <h1>{{collection.title}}</h1>
+    <div>
+      <app-search-bar
+        [(search)]="search"
+      >
+      </app-search-bar>
+    </div>
+  </header>
+  <section class="collection-grid">
+    @for (item of displayedItems(); track item.name){
+      @switch (item.rarity){
+        @case ('Legendary'){
+          <div>
+            <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
+            <hr class="gold">
+          </div>
+        }
+        @case ('Rare'){
+          <div>
+            <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
+            <hr class="dashed">
+          </div>
+        }
+        @default {
+          <div>
+            <app-collection-item-card [item]="item" (click)="openItem(item)"></app-collection-item-card>
+          </div>
+        }
       }
     }
-  }
-</section>
+  </section>
 @let displayedItemsCount = displayedItems().length;
 @if (displayedItemsCount > 0){
   <div class="centered">Found {{displayedItemsCount}}objet(s) affiché(s).</div>
@@ -37,9 +39,10 @@
 @else {
   <div>No result found</div>
 }
-<div  class="centered">
-  <button matButton="filled" (click)="addItem()"
-  >
-    Add Item
-  </button>
-</div>
+  <div  class="centered">
+    <button matButton="filled" (click)="addItem()"
+    >
+      Add Item
+    </button>
+  </div>
+}

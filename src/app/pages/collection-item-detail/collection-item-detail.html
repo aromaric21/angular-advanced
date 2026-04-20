@@ -29,7 +29,7 @@
   <div class="form-field">
     <button
       matButton="elevated"
-      (click)="$event.preventDefault(); imageUploader.click()"
+      (click)="$event.preventDefault(); imageUploader.click();"
      >
       Upload Image: {{imageUploader.files?.[0]?.name || '...'}}
     </button>
@@ -42,7 +42,7 @@
       (change)="onFileChange($event)"
     >
     @if (isFieldValid('image')){
-      <mat-error>This field is required!</mat-error>
+      <div class="error">This field is required!</div>
     }
   </div>
   <mat-form-field class="form-field">
@@ -66,13 +66,12 @@
            formControlName="price"
     />
     @if (isFieldValid('price')){
-      @let priceFC = itemFormGroup.get('price');
-      @if (priceFC?.hasError('min')){
-        <mat-error>
-          This value must be bigger or equal to 0.
-        </mat-error>
-      } @else {
+      @let priceFormControl = itemFormGroup.get('price');
+      @if (priceFormControl?.hasError('required')){
         <mat-error>This field is required!</mat-error>
+      }
+      @if (priceFormControl?.hasError('min')) {
+        <mat-error>This value must be bigger or equal to 0!</mat-error>
       }
     }
   </mat-form-field>
@@ -83,7 +82,7 @@
       }
     </div>
     <div class="right">
-      <button matButton="text" type="button" (click)="cancel()">Cancel</button>
+      <button matButton="text" type="button" (click)="navigateBack()">Cancel</button>
       <button
         matButton="filled"
         type="submit"
